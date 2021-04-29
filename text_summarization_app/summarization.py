@@ -18,9 +18,6 @@ def input_apikey() -> str:
 def select_task():
     """タスクを設定
     """
-    length = 0
-    rate = 0
-
     task = st.sidebar.selectbox(
         "何をしますか？",
         (
@@ -48,12 +45,11 @@ def select_task():
         url = "https://clapi.asahi.com/extract"
 
     if task == "重要な文を抽出後圧縮して、指定した長さにする":
-        num_setting = st.sidebar.number_input("一文の文字数は何文字にしますか？（10～2000字）", 10, 2000, 500, step=10)
+        num_setting = st.sidebar.number_input("出力する要約文のトータルの長さは？（10～2000字）", 10, 2000, 500, step=10)
         url = "https://clapi.asahi.com/control-len"
 
     if task:
-        auto_paragraph = st.sidebar.checkbox("パラグラフ分割：要約後の文章から自動的に段落を判断し段落ごとに分割して返却します。", True)
-        st.sidebar.write(auto_paragraph)
+        auto_paragraph = st.sidebar.checkbox("パラグラフ分割：段落単位に複数の要約文が結合されて返却されます", True)
         st.markdown(f"## {task}")
 
     return task, url, num_setting, auto_paragraph
@@ -146,8 +142,8 @@ def main():
             # リクエスト送信
             response = requests.post(url, input_json, headers=headers)
 
-            # 負荷軽減のために5秒スリープ
-            time.sleep(5)
+            # # 負荷軽減のために5秒スリープ
+            # time.sleep(5)
 
             # エンドポイントからレスポンスあったら結果を表示
             if response.status_code == 200:
